@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
-
+import authRoutes from "./routes/AuthRoutes.js";
 dotenv.config()
 
 const app = express()
@@ -20,6 +20,8 @@ app.use(cors({
 //To get cookies form the frontend.Acts as a middleware here
 app.use(cookieParser())
 app.use(express.json())
+
+app.use("/api/auth", authRoutes)
 
 const server = app.listen(port, () => {
     console.log(`Server is running at https://localhost:${port}`)
