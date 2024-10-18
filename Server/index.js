@@ -24,7 +24,7 @@ app.use(express.json())
 app.use("/api/auth", authRoutes)
 
 const server = app.listen(port, () => {
-    console.log(`Server is running at https://localhost:${port}`)
+    console.log(`Server is running at http://localhost:${port}`)
 })
 mongoose.connect(databaseURL).then(() => {
     console.log("Database Connected Successfully")
