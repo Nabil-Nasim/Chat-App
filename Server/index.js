@@ -17,6 +17,11 @@ app.use(cors({
     credentials: true
 }))
 
+
+//app.use("/uploads/profiles", ...): Sets up a URL path for accessing the static files.
+//express.static("uploads/profiles"): Tells Express where to find those files on the server.
+app.use("/uploads/profiles", express.static("uploads/profiles"))
+
 //To get cookies form the frontend.Acts as a middleware here
 app.use(cookieParser())
 app.use(express.json())
