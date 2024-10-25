@@ -107,7 +107,7 @@ export const getUserInfo = async (req, res, next) => {
 
             id: userData.id,
             email: userData.email,
-            profileSetup: userData.profilesetup,
+            profileSetup: userData.profileSetup,
             firstName: userData.firstName,
             lastName: userData.lastName,
             image: userData.image,
@@ -129,6 +129,10 @@ export const updateProfile = async (req, res, next) => {
             lastName,
             color
         } = req.body
+        if (!userId) {
+            return res.status(400).send("User ID is required.");
+          }
+      
         if (!firstName || !lastName || !color) {
             return res.status(400).send("First Name , Last Name and Color is Required")
         }
@@ -137,7 +141,7 @@ export const updateProfile = async (req, res, next) => {
             firstName,
             lastName,
             color,
-            profileSetup: true
+            profileSetup: true,
         }, {
             new: true,
             runValidators: true
@@ -147,10 +151,10 @@ export const updateProfile = async (req, res, next) => {
 
             id: userData.id,
             email: userData.email,
-            profileSetup: userData.profileSetup,
             firstName: userData.firstName,
             lastName: userData.lastName,
             image: userData.image,
+            profileSetup: userData.profileSetup,
             color: userData.color,
 
         })
