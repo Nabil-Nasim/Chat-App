@@ -3,9 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import { RiEmojiStickerLine } from "react-icons/ri";
 import { IoSend } from "react-icons/io5";
 import EmojiPicker from "emoji-picker-react";
+import { useAppStore } from "@/store";
+import { useSocket } from "@/context/SocketContext";
+
 const MessageBar = () => {
-  const [Message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
   const emojiRef = useRef();
+  const {selectedChatType,selectedChatData,userInfo} = useAppStore();
+  const socket = useSocket();
   const [emojiPickerOpen, setemojiPickerOpen] = useState(false);
 
   useEffect(() => {
@@ -23,7 +28,17 @@ const MessageBar = () => {
   const handleAddEmoji = (emoji) => {
     setMessage((msg) => msg + emoji.emoji);
   };
-  const handleSendMessage = async () => {};
+  const handleSendMessage = async () => {
+    if (selectedChatType === "contact") {
+      socket.emit("sendMessage", {
+        sender:userInfo.id,
+        content:message,
+        recipient:selectedChatData._id,
+        messageType:"text",
+        fileUrl:undefined,
+      })
+    }
+  };
   return (
     <div className="h-[10vh] bg-[#1c1d25] flex px-8 justify-center items-center mb-6 gap-6">
       <div className="flex fex-1 bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
@@ -31,7 +46,7 @@ const MessageBar = () => {
           type="text"
           className="flex-1 p-5 bg-transparent rounded-md focus:border-none focus:outline-none"
           placeholder="Enter Message"
-          value={Message}
+          value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
         <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all">
