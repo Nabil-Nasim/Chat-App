@@ -1,5 +1,5 @@
 import {
-    searchContact
+    searchContact , getContactsForDMList
 } from "../controllers/ContactsController.js";
 import {
     verifyToken
@@ -11,5 +11,7 @@ import {
 const contactsRoutes = Router();
 
 contactsRoutes.post("/search", verifyToken, searchContact)
+contactsRoutes.get("/get-contacts-for-dm", verifyToken, getContactsForDMList)
+
 
 export default contactsRoutes
