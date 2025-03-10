@@ -2,6 +2,7 @@ import {
     Server as SocketIOServer
 } from "socket.io"
 import Message from "./models/MessagesModel.js"
+import Channel from "./models/ChannelModel.js"
 const setupSocket = (server) => {
     const io = new SocketIOServer(server, {
         cors: {
@@ -47,7 +48,49 @@ const setupSocket = (server) => {
         io.to(senderSocketId).emit("receiveMessage",messageData);
     }
     }
-   
+
+    const sendChannelMessage = async(message)=>{
+     const {channelId,sender,content, messageType, fileUrl } = message
+     //we created the message
+     const createdMessage = await Message.create({
+         sender,
+         recipient:null,
+         content,
+         messageType,
+         timestamp:new Date(),
+         fileUrl,
+     })
+    //Fetching the Message with Sender Details
+     const messageData = await Message.findById(createdMessage._id)
+     .populate("sender","id email firstName lastName image color")
+     .exec()
+     //added the message to the channel
+     await Channel.findByIdAndUpdate(channelId,{
+         $push:{
+             messages:createdMessage._id
+         }
+     })
+     //Fetches the channel details including its members.
+     const channel = await Channel.findById(channelId).populate("members")
+
+     // Combine message data with channel ID for the final response
+     const finalData = {...messageData._doc,channelId:channel._id}
+
+     if (channel && channel.members){
+        channel.members.forEach((member)=>{
+            const memberSocketId = userSocketMap.get(member._id.toString());
+            if (memberSocketId){
+                io.to(memberSocketId).emit("receive-channel-message",finalData)
+            }
+          
+        })
+        const adminSocketId = userSocketMap.get(channel.admin._id.toString());
+        if (adminSocketId){
+            io.to(adminSocketId).emit("receive-channel-message",finalData)
+        }
+     }
+
+    }
     //(io.on("connection")): This listens for new client connections. When a new connection is made, the server:
     //Retrieves the userId from the client's handshake query (sent when the connection is initiated).
     //Maps the userId to the socket.id.
@@ -65,6 +108,7 @@ const setupSocket = (server) => {
             console.log("User Id not provided during connection")
         }
         socket.on("sendMessage",sendMessage)
+        socket.on("send-channel-message",sendChannelMessage)
         socket.on("disconnect", () => disconnect(socket))
     })
 }

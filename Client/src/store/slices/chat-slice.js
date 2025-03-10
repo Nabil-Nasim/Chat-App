@@ -36,7 +36,7 @@ export const createChatSlice = (set, get) => ({
     }),
     addMessage: (message) => {
        const selectedChatMessages = get().selectedChatMessages;
-       const selectedChatType = get().selectedChatData;
+       const selectedChatType = get().selectedChatType;
 // Update the state by adding the new message to the existing list of selected chat messages
        set ({
         selectedChatMessages:[...selectedChatMessages,{
@@ -50,7 +50,7 @@ export const createChatSlice = (set, get) => ({
             ? message.sender 
             : message.sender._id,
            
-        }]
+        },],
        })
 
     },
