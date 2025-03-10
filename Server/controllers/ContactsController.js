@@ -33,7 +33,7 @@ export const searchContact = async (req, res, next) => {
             contacts
         })
 
-        return res.status(200).send("Contacts Imported Successfully")
+      
 
     } catch (error) {
         console.log(error)
@@ -116,6 +116,28 @@ export const getContactsForDMList = async (req, res, next) => {
 
        
 
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+export const getAllContacts = async (req, res, next) => {
+    try {
+        //get all users except the current user
+        const user = await User.find({
+            _id: {
+                $ne: req.userId
+            }
+        },"firstName lastName _id email ")
+
+        const contacts = user.map((user) => ({
+           label: user.firstName? `${user.firstName} ${user.lastName}` : user.email,
+           value: user._id
+        }))
+        return res.status(200).json({contacts})
+
+      
     } catch (error) {
         console.log(error)
         return res.status(500).send("Internal Server Error")
