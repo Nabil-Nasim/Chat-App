@@ -16,7 +16,7 @@ const databaseURL = process.env.DATABASE_URL
 
 //Used for communication between servers
 app.use(cors({
-    origin: [process.env.ORIGIN],
+    origin: process.env.ORIGIN,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true
 }))
