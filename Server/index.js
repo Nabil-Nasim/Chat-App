@@ -14,14 +14,21 @@ const app = express()
 const port = process.env.PORT || 3001;
 const databaseURL = process.env.DATABASE_URL
 
-//Used for communication between servers
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", process.env.ORIGIN || "https://chat-app-frontend-omega-wine.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-CSRF-Token");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.status(200).end();
+});
+
+// Regular CORS for other requests
 app.use(cors({
   origin: process.env.ORIGIN || "https://chat-app-frontend-omega-wine.vercel.app",
-  methods: ["GET", "OPTIONS", "PATCH", "DELETE", "POST", "PUT"],
-  allowedHeaders: ["X-CSRF-Token", "X-Requested-With", "Accept", "Accept-Version", "Content-Length", "Content-MD5", "Content-Type", "Date", "X-Api-Version"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   credentials: true,
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization", "X-CSRF-Token"]
 }));
-
 
 
 
@@ -33,7 +40,7 @@ app.use("/uploads/files", express.static("uploads/files"))
 //To get cookies form the frontend.Acts as a middleware here
 app.use(cookieParser())
 app.use(express.json())
-app.options("*", cors());
+
 
 
 
