@@ -5,4 +5,5 @@ import {
 
 export const apiClient = axios.create({
     baseURL: HOST,
+    withCredentials: true,
 })
