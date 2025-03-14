@@ -8,6 +8,7 @@ const setupSocket = (server) => {
         cors: {
             origin: process.env.ORIGIN,
             methods: ["GET", "POST"],
+            allowedHeaders: ["X-CSRF-Token", "X-Requested-With", "Accept", "Content-Type"],
             credentials: true
         }
     })
