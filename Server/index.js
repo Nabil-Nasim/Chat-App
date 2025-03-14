@@ -15,11 +15,11 @@ const port = process.env.PORT || 3001;
 const databaseURL = process.env.DATABASE_URL
 
 //Used for communication between servers
-app.use(cors({
-    origin: process.env.ORIGIN,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: true
-}))
+// app.use(cors({
+//     origin: process.env.ORIGIN,
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+//     credentials: true
+// }))
 
 
 //app.use("/uploads/profiles", ...): Sets up a URL path for accessing the static files.
@@ -34,21 +34,13 @@ app.use(express.json())
 
 // Add this CORS middleware to allow preflight requests (OPTIONS) 
 // Only for Deployment Becuase of CORS issue in vercel
-app.use((req, res, next) => {
-  // Allow all the methods and headers for preflight requests
-  res.header('Access-Control-Allow-Origin', process.env.ORIGIN);
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
-  res.header('Access-Control-Allow-Credentials', 'true');
-
-  // If the request method is OPTIONS, respond with status 200
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", process.env.ORIGIN); // Allow requests from your frontend domain
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS"); // Allowed HTTP methods
+  res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials (cookies)
   next();
 });
-
 
 app.use("/api/auth", authRoutes)
 app.use("/api/contacts", contactsRoutes)
