@@ -16,10 +16,13 @@ const databaseURL = process.env.DATABASE_URL
 
 //Used for communication between servers
 app.use(cors({
-    origin: process.env.ORIGIN || "https://chat-app-frontend-omega-wine.vercel.app",
-    credentials: true,
-   
-}))
+  origin: process.env.ORIGIN || "https://chat-app-frontend-omega-wine.vercel.app",
+  methods: ["GET", "OPTIONS", "PATCH", "DELETE", "POST", "PUT"],
+  allowedHeaders: ["X-CSRF-Token", "X-Requested-With", "Accept", "Accept-Version", "Content-Length", "Content-MD5", "Content-Type", "Date", "X-Api-Version"],
+  credentials: true,
+}));
+
+
 
 
 //app.use("/uploads/profiles", ...): Sets up a URL path for accessing the static files.
@@ -30,14 +33,10 @@ app.use("/uploads/files", express.static("uploads/files"))
 //To get cookies form the frontend.Acts as a middleware here
 app.use(cookieParser())
 app.use(express.json())
+app.options("*", cors());
 
 
-// Add this CORS middleware to allow preflight requests (OPTIONS) 
-// Only for Deployment Becuase of CORS issue in vercel
-// Add this before your route definitions
-app.options('*', (req, res) => {
-  res.status(200).end();
-});
+
 
 app.use("/api/auth", authRoutes)
 app.use("/api/contacts", contactsRoutes)
