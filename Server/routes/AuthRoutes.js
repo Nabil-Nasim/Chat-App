@@ -16,9 +16,12 @@ import {
 import multer from "multer";
 
 const authRoutes = Router();
+// const upload = multer({
+//     dest: "uploads/profiles/"
+// }) ( For Local Host)
 const upload = multer({
     dest: "/tmp/uploads/profiles/"  // Use the /tmp directory for AWS Lambda or similar environments
-});
+}); // For Vercel Deployment
 
 authRoutes.post("/signup", signUp)
 authRoutes.post("/login", login)
