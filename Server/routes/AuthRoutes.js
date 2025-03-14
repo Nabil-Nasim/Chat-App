@@ -17,8 +17,8 @@ import multer from "multer";
 
 const authRoutes = Router();
 const upload = multer({
-    dest: "uploads/profiles/"
-})
+    dest: "/tmp/uploads/profiles/"  // Use the /tmp directory for AWS Lambda or similar environments
+});
 
 authRoutes.post("/signup", signUp)
 authRoutes.post("/login", login)
