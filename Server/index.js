@@ -31,6 +31,25 @@ app.use("/uploads/files", express.static("uploads/files"))
 app.use(cookieParser())
 app.use(express.json())
 
+
+// Add this CORS middleware to allow preflight requests (OPTIONS) 
+// Only for Deployment Becuase of CORS issue in vercel
+app.use((req, res, next) => {
+  // Allow all the methods and headers for preflight requests
+  res.header('Access-Control-Allow-Origin', process.env.ORIGIN);
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  res.header('Access-Control-Allow-Credentials', 'true');
+
+  // If the request method is OPTIONS, respond with status 200
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  next();
+});
+
+
 app.use("/api/auth", authRoutes)
 app.use("/api/contacts", contactsRoutes)
 app.use("/api/messages", messagesRoutes)
