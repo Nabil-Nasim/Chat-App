@@ -30,7 +30,8 @@ export const uploadFile = async (req, res, next) => {
         }
 
         const date = Date.now()
-         let fileDir = `/tmp/uploads/files/${date}`;
+         // let fileDir = `uploads/files/${date}` ( For Local Host)
+        let fileDir = `/tmp/uploads/files/${date}`; // For Vercel Deployment
         let fileName = `${fileDir}/${req.file.originalname}`
 
         mkdirSync(fileDir, { recursive: true })
