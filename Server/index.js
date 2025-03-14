@@ -17,9 +17,8 @@ const databaseURL = process.env.DATABASE_URL
 //Used for communication between servers
 app.use(cors({
     origin: process.env.ORIGIN || "https://chat-app-frontend-omega-wine.vercel.app",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
-    allowedHeaders: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+   
 }))
 
 
